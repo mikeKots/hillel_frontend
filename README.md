@@ -1,2 +1,2 @@
 # hillel_frontend
-Homework
+This repo contains homework solutions.
