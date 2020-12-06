@@ -1,26 +1,67 @@
+
+const VALID_OPERATORS = ['-', '+', '/', '*'];
+
 const operation = getOperation();
 
-const firstOperand = getOperand('First Operand');
-const secondOperand = getOperand('Second Operand');
+const howManyOperands = numberOfOperands();
 
-const result = calculate(operation, firstOperand, secondOperand);
+const operandsArray = new Array(howManyOperands).fill();
 
-showResult(operation, firstOperand, secondOperand, result);
+let result = 0;
+let calculationString = '';
+operandsArray.forEach((_, index) => {
+    let number = getOperand('Operand ' + (index +1));
+    result = getResult(operation, result, number, index);
+    calculationString = getCalculationString(number, result, calculationString, index);
+});
+
+showResult(calculationString);
+
+
+function getCalculationString(number, result, calculationString, index){
+    if (index != operandsArray.length -1){
+       return calculationString += `${number} ${operation} `
+    };  
+    return calculationString += `${number} = ${result}`;
+}
+
+function getResult(operation, result, number, index){
+    if (index > 0) {
+        return calculate(operation, result, number);
+    }
+    return number;
+}
 
 function getOperation(){
     let operation = prompt('What to do?', 'Like + or -');
-    while (operation != '-' && operation != '+' && operation != '/' && operation != '*') {
+    while (!isOperatorValid(operation)) {
         operation = prompt('Please set correct operation');
     }
     return operation;
 }
 
 function getOperand(operandName){
-    let operand = Number(prompt('Operand' + operandName));
-    while(isNaN(operand)) {
+    let operand = Number(prompt('Set ' + operandName));
+    while(!isOperandValid(operand)) {
         operand = Number(prompt('Please set Number'));
     }
     return operand;
+}
+
+function numberOfOperands(){
+    let operandNumber = Number(prompt('How many Operands You want?'));
+    while(!isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)) {
+        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
+    }
+    return operandNumber;
+}
+
+function isOperandValid(operand){
+    return !isNaN(operand) && operand > 0;
+}
+
+function isOperatorValid(operation){
+    return VALID_OPERATORS.includes(operation);
 }
 
 function calculate(operation, firstOperand, secondOperand){
@@ -35,7 +76,7 @@ function calculate(operation, firstOperand, secondOperand){
     return result;
 }
 
-function showResult(operation, firstOperand, secondOperand, result){
-    console.log(`${firstOperand} ${operation} ${secondOperand} = ${result}`);
-    alert(`${firstOperand} ${operation} ${secondOperand} = ${result}`);
+function showResult(calculationString){
+    console.log(calculationString);
+    alert(calculationString);
 }
