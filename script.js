@@ -1,90 +1,60 @@
-
-const VALID_OPERATORS = ['-', '+', '/', '*'];
-
-const operation = getOperation();
-
-const howManyOperands = numberOfOperands();
-
-const finalResult = getFinalResult();
-
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
-}
-
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
+const questionPool = [
+    {
+        id:1,
+        question: 'Сколько будет 2+2?',
+        question_type: 'complex',
+        correct_answer: '4'
+    },
+    {
+        id:2,
+        question: 'Солнце встает на востоке?',
+        question_type: 'simple',
+        correct_answer: true
+    },
+    {
+        id:3,
+        question: 'Сколько будет 5 / 0?',
+        question_type: 'complex',
+        correct_answer: 'infinity'
+    },
+    {
+        id:4,
+        question: 'Какого цвета небо?',
+        question_type: 'complex',
+        correct_answer: 'blue'
+    },
+    {
+        id:5,
+        question: 'Как правильный ответ на главный вопрос жизни, вселенной и всего такого.',
+        question_type: 'complex',
+        correct_answer: '42'
     }
-    return number;
-}
+]
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
-    }
-    return operation;
-}
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
-    }
-    return operand;
-}
+askQuestion(questionPool);
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
-}
+function askQuestion(questionPool) {
+    let sumOfAnswers = [];
+    questionPool.forEach((item, index) => {
+        switch(item.question_type) {
+            case 'complex' : setPointsForQuestion(prompt(item.question, ''), sumOfAnswers, item);
+            break;
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
-}
+            case 'simple' : setPointsForQuestion(confirm(item.question), sumOfAnswers, item);
+            break;
 
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
-}
-
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
+            default : null;
+            break;
+        }
     });
-    return calculationString;
-}
 
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
+    result = sumOfAnswers.reduce((acc, index) => acc + index);
+
+    alert( 'Ваш результат: ' + result);
     return result;
 }
 
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+function setPointsForQuestion(question, sumOfAnswers, item) {
+        return question ===  item.correct_answer ? sumOfAnswers.push(10) : sumOfAnswers.push(0);
 }
