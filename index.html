@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Another Homework Example</title>
-        <meta name="description" content="">
+        <title>To-Do List</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
-        <script src="script.js" async></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bad+Script">
+        <link rel="shortcut icon" href="assets/favicon.ico">
+        <link rel="icon" type="image/gif" href="assets/animated_favicon.gif">
     </head>
     <body>
-        <div>Hello World!</div>
+        <div id="todo">
+            <h1>Мои списки дел <i id="pensil" class="fas fa-pencil-alt"></i></h1>
+            <ul id="todos" class="todos">
+                <li><span class="todo-text">Вымыть кухню</span><span class="todo-trash"><i class="fas fa-trash-alt"></i></span></li>
+                <li><span class="todo-text">Пойти в театр</span><span class="todo-trash"><i class="fas fa-trash-alt"></i></span></li>
+            </ul>
+            <div id="buttons">
+                <input id="add-to-list" type="text">
+                <button id="save-button" class="save">Сохранить</button>
+            </div>
+        </div>
+    <script src="script.js"></script>
     </body>
 </html>
