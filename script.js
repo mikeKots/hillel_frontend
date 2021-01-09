@@ -1,90 +1,57 @@
+const nameInput = document.querySelector('#nameInput');
+const houseNumberInput = document.querySelector('#houseNumberInput');
+const telNubmerInput = document.querySelector('#telNubmerInput');
+const actionsInput = document.querySelector('#actionsInput');
+const listEl = document.querySelector('.d-table');
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
+document.getElementById('addTaskBtn').addEventListener('click', onAddBtnClick);
 
-const operation = getOperation();
-
-const howManyOperands = numberOfOperands();
-
-const finalResult = getFinalResult();
-
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
-}
-
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
+function onAddBtnClick() {
+    if (!isInputValid(nameInput.value, houseNumberInput.value, telNubmerInput.value)) {
+        return;
     }
-    return number;
+    addNewRecord(nameInput.value, houseNumberInput.value, telNubmerInput.value);
+    clearInput();
 }
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
-    }
-    return operation;
+function addNewRecord(name, houseNumber, telNumber) {
+    const taskEl = document.createElement('div');
+    taskEl.className = 'd-tr book-records';
+    const nameCell = createTableCellWithText(name);
+    const houseNumberCell = createTableCellWithText(houseNumber);
+    const telNumberCell = createTableCellWithText(telNumber);
+    taskEl.append(nameCell, houseNumberCell, telNumberCell, addDeleteCell());
+    const records = document.querySelector('#records');
+    records.append(taskEl);
 }
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
-    }
-    return operand;
+function createTableCellWithText(text) {
+    const tableCell = document.createElement('div');
+    tableCell.className = 'd-td';
+    tableCell.innerText = text;
+    return tableCell;
 }
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
+function isInputValid(name, houseNumber, telNumber) {
+    return name && houseNumber && telNumber;
 }
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
+function deleteElement(event) {
+    event.target.parentNode.parentNode.remove();
 }
 
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
+function addDeleteCell() {
+    const deleteButtonDiv = document.createElement('div');
+    deleteButtonDiv.className ='d-td';
+    const deleteButton = document.createElement('button');
+    deleteButton.addEventListener('click', deleteElement);
+    deleteButton.innerText = 'Delete';
+    deleteButtonDiv.append(deleteButton);
+    return deleteButtonDiv;
 }
 
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
-    });
-    return calculationString;
-}
-
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
-    return result;
-}
-
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+function clearInput() {
+    nameInput.value = '';
+    houseNumberInput.value = '';
+    telNubmerInput.value = '';
 }

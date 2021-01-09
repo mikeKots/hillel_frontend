@@ -1,15 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Another Homework Example</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles.css">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="../common/css/normalize.css" />
+        <link rel="stylesheet" href="../common/css/skeleton.css" />
+        <link rel="stylesheet" href="../common/css/dark-theme.css" />
+        <link rel="stylesheet" href="styles.css" />
         <script src="script.js" async></script>
+        <title>Document</title>
     </head>
     <body>
-        <div>Hello World!</div>
+        <div class="container">
+            <div id="taskList" class="task-list u-full-width"></div>
+            <div class="row">
+                <div id="records" class="d-table">
+                    <div class="d-tr">
+                      <div class="d-td">Name</div>
+                      <div class="d-td">House Number</div>
+                      <div class="d-td">Telephone Number</div>
+                      <div class="d-td">Actions</div>
+                    </div>
+                </div>
+                <div class="d-table">
+                    <div id="bookRecordInput" class="d-tr">
+                        <div class="d-td"><input placeholder="Name" type="text"id="nameInput"class="u-full-width"/></div>
+                        <div class="d-td"><input placeholder="House Number" type="text"id="houseNumberInput"class="u-full-width"/></div>
+                        <div class="d-td"><input placeholder="Telephone Number" type="text"id="telNubmerInput"class="u-full-width"/></div>
+                      </div>
+                </div>
+                <div class="two">
+                    <input id="addTaskBtn" type="submit" class="u-full-width" value="Add" />
+                </div>
+            </div>
+        </div>
     </body>
 </html>
