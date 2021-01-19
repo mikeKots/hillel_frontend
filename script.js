@@ -1,90 +1,68 @@
+"use strict";
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
-
-const operation = getOperation();
-
-const howManyOperands = numberOfOperands();
-
-const finalResult = getFinalResult();
-
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
+Hamburger.SIZE_SMALL = {
+    price : 50,
+    callories : 20
 }
 
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
-    }
-    return number;
+Hamburger.SIZE_MEDIUM = {
+    price : 75,
+    callories : 30
 }
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
-    }
-    return operation;
+Hamburger.SIZE_BIG = {
+    price : 100,
+    callories : 40
 }
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
-    }
-    return operand;
+Hamburger.TOPPING_CHESE = {
+    price : 10,
+    callories : 20
 }
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
+Hamburger.TOPPING_MAYO = {
+    price : 20,
+    callories : 5
 }
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
+Hamburger.TOPPING_SALAT = {
+    price : 20,
+    callories : 5
 }
 
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
+Hamburger.TOPPING_POTATO = {
+    price : 15,
+    callories : 10
 }
 
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
+Hamburger.TOPPING_SPICE = {
+    price : 15,
+    callories : 0
 }
 
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
-    });
-    return calculationString;
+function Hamburger(size) {
+    this.size = size;
+    this.toppings = [];
 }
 
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
-    return result;
+Hamburger.prototype.addTopping = function(toppingType) {
+    return this.toppings.push(toppingType);
 }
 
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+Hamburger.prototype.getPrice = function() {
+    return this.priceResult = this.size.price + this.toppings.reduce((acc, topping) => acc + topping.price, 0);
 }
+
+Hamburger.prototype.getCallories = function() {
+    return this.calloriesResult = this.size.callories + this.size.price + this.toppings.reduce((acc, topping) => acc + topping.callories, 0);
+}
+
+const hamburger = new Hamburger(Hamburger.SIZE_SMALL);
+
+hamburger.addTopping(Hamburger.TOPPING_MAYO);
+hamburger.addTopping(Hamburger.TOPPING_POTATO);
+hamburger.addTopping(Hamburger.TOPPING_POTATO);
+
+console.log("Price with sauce:" + hamburger.getPrice());
+console.log("Callories with sauce: " + hamburger.getCallories());
+
