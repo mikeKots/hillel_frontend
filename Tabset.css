@@ -1,0 +1,44 @@
+.container {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+
+.container .kots-custom-tab {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+  .container .kots-custom-tab:hover {
+    background-color: #ddd;
+  }
+
+  .container .kots-custom-tab.active {
+    background-color: #ccc;
+  }
+  
+  .kots-tabset-body {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+  }
+
+  .open-body {
+    display: block;
+    border: 1px solid black;
+  }
+
+  .kots-tabset-title {
+      border: 1px solid black;
+  }
+
+  .container .active-tab {
+      background-color: burlywood;
+  }
+
