@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Another Homework Example</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles.css">
-        <script src="script.js" async></script>
-    </head>
-    <body>
-        <div>Hello World!</div>
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Contacts</title>
+    <link rel="stylesheet" href="../common/css/normalize.css" />
+    <link rel="stylesheet" href="../common/css/skeleton.css" />
+    <link rel="stylesheet" href="../common/css/dark-theme.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="script.js" async></script>
+</head>
+<body>
+<form id="gitHubUserInfo" class="form">
+    <table class="u-full-width">
+        <thead>
+            <h1 class="text-center">Get Github user information</h1>
+        </thead>
+        <tbody id="gitHubUsersList"></tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4" class="text-center">
+                <input
+                        type="text"
+                        name="userInfo"
+                        id="userInfo"
+                        class="user-info-input"
+                />
+                <button id="getUserInfoButton">Get info ...</button>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</form>
+<script type="text/template" id="gitHubInfoUser">
+    <tr>
+        <td class="text-center"><img class="git-image" src="{{avatar_url}}" alt="{{login}}"></td>
+        <td>{{public_repos}}</td>
+        <td>{{followers}}</td>
+        <td>{{following}}</td>
+    </tr>
+</script>
+</body>
 </html>

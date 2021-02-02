@@ -1,0 +1,16 @@
+.table-footer {
+    text-align: center;
+}
+
+.form-input.invalid {
+    border-color: red;
+}
+
+.git-image {
+    width: 100px;
+    height: 100px;
+}
+
+.text-center {
+    text-align: center;
+}
