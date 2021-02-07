@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Another Homework Example</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styles.css">
-        <script src="script.js" async></script>
-    </head>
-    <body>
-        <div>Hello World!</div>
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Contacts</title>
+    <link rel="stylesheet" href="../common/css/normalize.css" />
+    <link rel="stylesheet" href="../common/css/skeleton.css" />
+    <link rel="stylesheet" href="../common/css/dark-theme.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" async></script>
+</head>
+<body>
+<form id="newToDoForm" class="form half-width">
+    <table class="u-full-width">
+        <thead >
+            <h1>Мои списки дел</h1>
+        </thead>
+        <tbody id="todoList"></tbody>
+        <tfoot>
+        <tr>
+            <td>
+                <input
+                        type="text"
+                        name="todo"
+                        id="todoFormInput"
+                        class="todo-form-input"
+                />
+            </td>
+            <td><button id="addContactBtn">Add new task</button></td>
+        </tr>
+        </tfoot>
+    </table>
+</form>
+<script type="text/template" id="newToDoRecord">
+    <tr class="newToDoRecord-row created-todo {{doneClass}}" data-todo-id="{{id}}">
+        <td>{{newtodo}}</td>
+        <td><button type="button" class="delete-btn">Х</button></td>
+    </tr>
+</script>
+</body>
 </html>

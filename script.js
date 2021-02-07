@@ -1,90 +1,69 @@
+const TODOS_URL = 'https://jsonplaceholder.typicode.com/todos/';
+const DELETE_BTN_CLASS = 'delete-btn';
+const NEW_TODO_ROW_SELECTOR = '.newToDoRecord-row';
+const DONE_CLASS = 'finished-todo';
+const TASK_ITEM_CLASS = 'created-todo';
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
+const todoList = document.querySelector('#todoList');
+const todoTemplate = document.querySelector('#newToDoRecord').innerHTML;
 
-const operation = getOperation();
+let todoListArr = [];
 
-const howManyOperands = numberOfOperands();
+todoList.addEventListener('click', onTodoListClick);
 
-const finalResult = getFinalResult();
+init();
 
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
+function init() {
+    fetchTodos()
 }
 
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
-    }
-    return number;
+function fetchTodos() {
+    fetch(TODOS_URL)
+    .then(res => res.json())
+    .then(setTodos)
+    .then(renderTodos);
 }
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
-    }
-    return operation;
+function renderTodos(list) {
+    const html = list.map(generateTodosHtml).join('');
+    todoList.innerHTML = html;
 }
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
-    }
-    return operand;
+function generateTodosHtml(todo) {
+        return todoTemplate
+            .replace('{{doneClass}}', todo.completed ? DONE_CLASS : '')
+            .replace('{{id}}', todo.id)
+            .replace('{{newtodo}}', todo.title);
 }
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
+
+function setTodos(list) {
+    return (todoListArr = list);
 }
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
+function onTodoListClick(e) {
+    const taskEl = getTodoRow(e.target);
+
+    switch(true) {
+        case e.target.classList.contains(DELETE_BTN_CLASS) :
+            return removeTodo(+taskEl.dataset.todoId);
+        case e.target.classList.contains(TASK_ITEM_CLASS) :
+    }       return toggleTodo(+taskEl.dataset.todoId);
+
+}
+ 
+function toggleTodo(todoId) {
+    const todo = todoListArr.find((todo) => todo.id === todoId);
+    todo.completed = !todo.completed;
+
+    renderTodos(todoListArr);
 }
 
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
+function getTodoRow(el) {
+    return el.parentElement.closest(NEW_TODO_ROW_SELECTOR);
 }
 
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
-    });
-    return calculationString;
-}
-
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
-    return result;
-}
-
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+function removeTodo(todoId) {
+    todoListArr.splice(todoListArr.findIndex(todo => todo.id === todoId), 1);
+    renderTodos(todoListArr);
 }
