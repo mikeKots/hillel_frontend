@@ -119,8 +119,5 @@ function getId(id) {
 }
 
 function removeElementById(id) {
-    debugger
     return document.querySelector(`div[data-todo-id="${id}"]`).remove();
 }
-
-
