@@ -1,4 +1,4 @@
-const TODOS_URL = 'https://5dd3d5ba8b5e080014dc4bfa.mockapi.io/contacts/';
+const CONTACTS_URL = 'https://5dd3d5ba8b5e080014dc4bfa.mockapi.io/contacts/';
 
 const nameInput = document.querySelector('#nameInput');
 const surnameInput = document.querySelector('#surnameInput');
@@ -7,8 +7,9 @@ const contactsTemplate = document.querySelector('#newContact').innerHTML;
 const todoList = document.querySelector('#records');
 const deleteBtnClass = 'delete-button';
 const createdEl = 'created-contact';
+const createdElClass = '.created-contact';
 
-const todosResource = new Http(TODOS_URL);
+const contactsResource = new Http(CONTACTS_URL);
 
 let currentId;
 
@@ -45,14 +46,14 @@ function recordHandler(id, name, surname, phone) {
 }
 
 function addNewRecord(data) {
-    return todosResource.create(data).then((res) => {
+    return contactsResource.create(data).then((res) => {
         const newRecord = generateContactsHtml(res);
         records.innerHTML += newRecord;
     });
 }
 
 function modifyRecord(id, data) {
-    return todosResource.update(id, data).then((res) => {
+    return contactsResource.update(id, data).then((res) => {
         removeElementById(res.id);
         const newRecord = generateContactsHtml(res);
         records.innerHTML += newRecord;
@@ -65,23 +66,11 @@ function isInputValid(name, houseNumber, telNumber) {
 
 function rowClickHandler(event) {
     if (event.target.classList.contains(deleteBtnClass)) {
-        const recordId = event.target.parentElement.parentElement.dataset.todoId;
-        todosResource.delete(recordId).then((res) => {
-           const deleteCandidate = document.querySelector(`div[data-todo-id="${res.id}"]`);
-           deleteCandidate.remove();
-        }); 
+        deleteRecodg(event);
     }
 
     if (event.target.parentElement.classList.contains(createdEl)) {
-        let inputs = [];
-        Array.prototype.forEach.call(event.target.parentElement.children, (child) => {
-            if (child.children.length > 0) {
-                return
-            }
-            inputs.push(child.innerText);
-        })
-        currentId = +getId(event.target.parentElement.dataset.todoId);
-        fillInput(inputs[0], inputs[1], inputs[2]);
+        setRecordValuesToUpdate(event)
     }
 }
 
@@ -111,13 +100,42 @@ function renderContacts(list) {
 }
 
 function fetchContacts(){
-    todosResource.list().then(renderContacts);
+    contactsResource.list().then(renderContacts);
 }
 
-function getId(id) {
-    return id;
+function getContactById(id) {
+    return document.querySelector(`div[data-todo-id="${id}"]`);
 }
 
 function removeElementById(id) {
-    return document.querySelector(`div[data-todo-id="${id}"]`).remove();
+    if (id !== undefined) {
+        return document.querySelector(`div[data-todo-id="${id}"]`).remove();
+    } else {
+        throw Error('Id not found');
+    }
+}
+
+function deleteRecodg(event) {
+    const recordId = event.target.closest(createdElClass);
+    contactsResource.delete(recordId).then((res) => {
+       removeElementById(res.id);   
+    });
+}
+
+function setRecordValuesToUpdate(event) {
+    let inputs = [];
+        Array.prototype.forEach.call(event.target.parentElement.children, (child) => {
+            if (child.children.length > 0) {
+                return
+            }
+            inputs.push(child.innerText);
+        })
+        currentId = +event.target.parentElement.dataset.todoId;
+        getRecordById(currentId).then((res) => {
+            fillInput(res.name, res.surname, res.telephone);
+        });
+}
+
+function getRecordById(id) {
+    return contactsResource.getById(id);
 }
