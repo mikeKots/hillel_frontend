@@ -10,6 +10,23 @@
         <script src="script.js" async></script>
     </head>
     <body>
-        <div>Hello World!</div>
+        <div>
+            <div class="left-menu">
+                <script type="text/template" id="newMenyItem">
+                    <ul class="menu-content">
+                        <li class="menu-item" data-album-id="{{albumId}}">{{menuItem}}</li>
+                    </ul>
+            </script>
+            </div>
+            <div class="photos-area">
+                <div class="row">
+                    <script type="text/template" id="photoElement">
+                        <div class="column">
+                            <img src="{{src}}" alt="{{alt}}" style="width:100%">
+                        </div>
+                    </script>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

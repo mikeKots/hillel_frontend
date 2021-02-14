@@ -1,90 +1,90 @@
+const ALBUMS_URL = 'https://jsonplaceholder.typicode.com/albums';
+const PHOTOS_URL = 'https://jsonplaceholder.typicode.com/photos?albumId=';
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
+const menuTemplate = document.querySelector('#newMenyItem').innerHTML;
+const contentTemplate = document.querySelector('#photoElement').innerHTML;
+const contentEl = document.querySelector('.photos-area');
+const menuEl = document.querySelector('.left-menu');
+const menuItemEl = 'menu-item';
+const menuArea = 'menu';
+const contentArea = 'content';
 
-const operation = getOperation();
+let albumItem;
 
-const howManyOperands = numberOfOperands();
+getAlbumsList();
+getAlbumItem();
 
-const finalResult = getFinalResult();
+menuEl.addEventListener('click', rowClickHandler);
 
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
-}
-
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
+function rowClickHandler(event) {
+    if (event.target.classList.contains(menuItemEl)) {
+        return getPhotosByAlbumId(+event.target.dataset.albumId).then((res) => renderPhotosContent(res));
     }
-    return number;
 }
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
+function getPhotosByAlbumId(albumId) {
+    const fullUrl = PHOTOS_URL + albumId;
+    return doRequest(fullUrl, 'GET');
+}
+
+function getAlbumsList() {
+    return doGetRequset().then((res) => {
+        renderPhotosMenu(res);
+        return getPhotosByAlbumId(res[0].id);
+    }).then((res) => renderPhotosContent(res));
+}
+
+function getAlbumItem() {
+    return doGetRequset().then((res) => albumItem = res);
+}
+
+function doGetRequset() {
+    return doRequest(ALBUMS_URL, 'GET');
+}
+
+function doRequest(url, method) {
+    return fetch(url, {
+        method,
+        headers: {
+            'Content-type': 'appclication/json',
+        }
+    }).then((res) => res.json());
+}
+
+function renderPhotosMenu(list) {
+    return render(list, menuEl, menuArea);
+}
+
+function renderPhotosContent(list) {
+    return render(list, contentEl, contentArea);
+}
+
+function generateContentHtml(photoEl) {
+    return generate(photoEl, photoEl, contentArea);
+}
+
+function generateMenuHtml(photoItem) {
+    return generate(menuTemplate, photoItem, menuArea);
+}
+
+function generate(el, item, areaType) {
+    if (areaType == menuArea) {
+        return el
+        .replace('{{menuItem}}', item.title)
+        .replace('{{albumId}}', item.id);
+    } else {
+        return contentTemplate
+        .replace('{{src}}', item.url)
+        .replace('{{alt}}', item.title);
     }
-    return operation;
 }
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
+function render(list, el, areaType) {
+    let html;
+    if (areaType == menuArea) {
+        html = list.map(generateMenuHtml).join('');
+    } else {
+        html = list.map(generateContentHtml).join('');
     }
-    return operand;
-}
-
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
-}
-
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
-}
-
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
-}
-
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
-    });
-    return calculationString;
-}
-
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
-    return result;
-}
-
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+    el.innerHTML = html;
 }
