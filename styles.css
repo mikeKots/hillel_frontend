@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+
+.stickers-list {
+    width: 100%;
+    min-height: 920px;
+    border: 1px solid white;
+    display: inline-block;
+}
+
+.stickers-list .stickers-header {
+    width: 100%;
+    display:inline-block;
+    border-bottom: 1px solid white;
+}
+
+.stickers-header-label {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.stickers-header-button {
+    float: right;
+    margin-right: 20px;
+}
+
+.sticker {
+    margin: 20px 0 0 20px;
+    border: 1px solid white;
+    width: 30%;
+    padding: 8px 12px;
+    float: left;
+}
+
+.sticker-header {
+    width: 100%;
+    display:inline-block;
+}
+
+.sticker-label {
+    width: 74%;
+    display: inline-block;
+}
+
+.sticker-button {
+    width: 24%;
+}
+
+.sticker-description {
+    width: 100%;
+    resize: none;
+}

@@ -1,90 +1,66 @@
+$( document ).ready(() => {
+    const STICKERS_URL = 'https://5dd3d5ba8b5e080014dc4bfa.mockapi.io/stickers/';
+    const stickersResource = new Http(STICKERS_URL);
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
+    const addButton = $('.stickers-header-button');
+    const stickerList = $('.stickers-list');
 
-const operation = getOperation();
+    addButton.on('click', addNewsticker);
 
-const howManyOperands = numberOfOperands();
+    getList();
 
-const finalResult = getFinalResult();
-
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
-}
-
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
+    function addNewsticker() {
+        stickersResource.create({}).then((res) => {stickerList.append(getStickerTemplate(res.id, res.description))});
     }
-    return number;
-}
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
+    function getStickerTemplate(id, description) {
+        return $(`<div class="sticker" data-id="${id}">
+        <div class="sticker-header">
+            <label class="sticker-label">Label</label>
+            <button class="sticker-button">X</button>
+        </div>
+        <div>
+            <textarea class="sticker-description">${description}</textarea>
+        </div>
+        </div>`);
     }
-    return operation;
-}
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
+    function getList() {
+        stickersResource.get().then((res) => {
+            res.forEach(sticker => {
+                stickerList.append(getStickerTemplate(sticker.id, sticker.description));
+            });
+            registerDeleteListener();
+            registerEditListener();
+        });
     }
-    return operand;
-}
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
+    function deleteSticker(e) {
+        const id = +e.target.closest('.sticker').dataset.id;
+        return stickersResource.delete(id).then((res) => {
+            $(`[data-id=${id}]`).remove();
+        });
     }
-    return operandNumber;
-}
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
-}
-
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
-}
-
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
-    });
-    return calculationString;
-}
-
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
+    function editSticker(e) {
+        const id = +e.target.closest('.sticker').dataset.id;
+        const description = $(e.target).val();
+        return stickersResource.put(id, {description}).then((res) => {
+            $(e.target).val(res.description);
+        });
     }
-    return result;
-}
 
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
-}
+    function registerDeleteListener() {
+        $('.sticker-button').each((_, element) => {
+            $(element).on('click', deleteSticker);
+        })
+    }
+
+    function registerEditListener() {
+        $('.sticker-description').each((_, element) => {
+            $(element).on('blur', editSticker);
+        })
+    }
+
+})
+
