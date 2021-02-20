@@ -1,90 +1,164 @@
+const URL = 'https://5dd3d5ba8b5e080014dc4bfa.mockapi.io/contacts';
+const DELETE_BTN_CLASS = 'delete-btn';
+const EDIT_BTN_CLASS = 'edit-btn';
 
-const VALID_OPERATORS = ['-', '+', '/', '*'];
+const listEl = document.getElementById('contactsList');
+const idInputEl = document.getElementById('contactId');
+const nameInputEl = document.getElementById('name');
+const surnameInputEl = document.getElementById('surname');
+const phoneInputEl = document.getElementById('phone');
+const addBtnEl = document.getElementById('addContactBtn');
+const contactTemplate = document.getElementById('contactTemplate').innerHTML;
 
-const operation = getOperation();
-
-const howManyOperands = numberOfOperands();
-
-const finalResult = getFinalResult();
-
-showResult(finalResult);
-
-
-function getCalculationString(number, result, calculationString, index, operandsArray){
-    if (index != operandsArray.length -1){
-       return calculationString += `${number} ${operation} `
-    };  
-    return calculationString += `${number} = ${result}`;
-}
-
-function getResult(operation, result, number, index){
-    if (index > 0) {
-        return calculate(operation, result, number);
+const $formDialog = $('#formModal').dialog({
+    autoOpen: false,
+    modal: true,
+    buttons: {
+        Save: () => {
+            submitForm();
+            closeModalForm();
+        },
+        Cancel: () => {
+            closeModalForm();
+        }
     }
-    return number;
-}
+});
 
-function getOperation(){
-    let operation = prompt('What to do?', 'Like + or -');
-    while (!isOperatorValid(operation)) {
-        operation = prompt('Please set correct operation');
+let list = [];
+
+listEl.addEventListener('click', onListElClick);
+addBtnEl.addEventListener('click', onaAdBtnElClick);
+
+init();
+
+function onListElClick(e) {
+    switch (true) {
+        case e.target.classList.contains(DELETE_BTN_CLASS):
+            deleteItem(getElementId(e.target));
+            break;
+        case e.target.classList.contains(EDIT_BTN_CLASS):
+            editWithModalForm(e);
+            break;
     }
-    return operation;
 }
 
-function getOperand(operandName){
-    let operand = Number(prompt('Set ' + operandName));
-    while(!isOperandValid(operand)) {
-        operand = Number(prompt('Please set Number'));
+function getElementId(element) {
+    return element.closest('.item').dataset.id;
+}
+
+function onaAdBtnElClick() {
+    openModalForm();
+    clearForm();
+}
+
+function init() {
+    getList();
+}
+
+function getList() {
+    request(URL).then(setData).then(renderList);
+}
+
+function setData(data) {
+    return (list = data);
+}
+
+function renderList(data) {
+    $(listEl).html(data.map(getItemElementHtml).join(''));
+}
+
+function getItemElementHtml(item) {
+    return contactTemplate
+        .replace('{{id}}', item.id)
+        .replace('{{name}}', item.name)
+        .replace('{{surname}}', item.surname)
+        .replace('{{phone}}', item.phone);
+}
+
+function deleteItem(id) {
+    request(`${URL}/${id}`, 'DELETE');
+
+    list = list.filter((item) => item.id != id);
+
+    renderList(list);
+}
+
+function editItem(id) {
+    const item = list.find((el) => el.id == id);
+
+    fillForm(item);
+}
+
+function submitForm() {
+    const item = getFormData();
+    if (item.id) {
+        updateContact(item);
+    } else {
+        addContact(item);
     }
-    return operand;
 }
 
-function numberOfOperands(){
-    let operandNumber = Number(prompt('How many Operands You want?'));
-    while(isNumberOperandsValid(operandNumber)) {
-        operandNumber = Number(prompt('Please set correct number of operands (more than 2 and less than 5)'));
-    }
-    return operandNumber;
+function openModalForm() {
+    $formDialog.dialog('open');
 }
 
-function isOperandValid(operand){
-    return !isNaN(operand) && operand > 0;
+function closeModalForm() {
+    $formDialog.dialog('close');
 }
 
-function isOperatorValid(operation){
-    return VALID_OPERATORS.includes(operation);
+function editWithModalForm(e) {
+    openModalForm();
+    editItem(getElementId(e.target));
+    submitForm();
 }
 
-function isNumberOperandsValid(operandNumber){
-    return !isOperandValid(operandNumber) || !(operandNumber >= 2 && operandNumber <= 5)
-}
-
-function getFinalResult(){
-    const operandsArray = new Array(howManyOperands).fill();
-    let result = 0;
-    let calculationString = '';
-    operandsArray.forEach((_, index) => {
-        let number = getOperand('Operand ' + (index +1));
-        result = getResult(operation, result, number, index);
-        calculationString = getCalculationString(number, result, calculationString, index, operandsArray);
+function addContact(item) {
+    delete item.id;
+    
+    request(URL, 'POST', item).then((data) => {
+        list.push(data);
+        renderList(list);
+        clearForm();
     });
-    return calculationString;
 }
 
-function calculate(operation, firstOperand, secondOperand){
-    let result;
-    switch (operation) {
-        case "+" : result = firstOperand + secondOperand; break;
-        case "-" : result = firstOperand - secondOperand; break;
-        case "/" : result = firstOperand / secondOperand; break;
-        case "*" : result = firstOperand * secondOperand; break;
-        default : result = 'unknown'
-    }
-    return result;
+function updateContact(item) {
+    request(`${URL}/${item.id}`, 'PUT', item);
+
+    list = list.map((el) => (el.id != item.id ? el : item));
+
+    renderList(list);
 }
 
-function showResult(calculationString){
-    console.log(calculationString);
-    alert(calculationString);
+function getFormData() {
+    return {
+        id: idInputEl.value,
+        name: nameInputEl.value,
+        surname: surnameInputEl.value,
+        phone: phoneInputEl.value,
+    };
+}
+
+function fillForm(obj) {
+    idInputEl.value = obj.id;
+    nameInputEl.value = obj.name;
+    surnameInputEl.value = obj.surname;
+    phoneInputEl.value = obj.phone;
+}
+
+function clearForm() {
+    idInputEl.value = '';
+    nameInputEl.value = '';
+    surnameInputEl.value = '';
+    phoneInputEl.value = '';
+}
+
+function request(url, method = 'GET', data) {
+    return fetch(url, {
+        method,
+        body: data && JSON.stringify(data),
+        headers: { 'Content-type': 'application/json' },
+    })
+        .then((res) => (res.ok ? res.json() : Promise.reject()))
+        .catch(() => getList());
 }
