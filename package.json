@@ -1,0 +1,22 @@
+{
+  "name": "kots_calculator_node",
+  "version": "1.0.0",
+  "description": "Simple calculator",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikeKots/hillel_frontend.git"
+  },
+  "keywords": [
+    "calculator"
+  ],
+  "author": "Mikhail Kots",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikeKots/hillel_frontend/issues"
+  },
+  "homepage": "https://github.com/mikeKots/hillel_frontend#readme"
+}
