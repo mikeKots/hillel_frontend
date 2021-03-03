@@ -1,0 +1,24 @@
+{
+  "name": "hillel_frontend",
+  "description": "This repo contains homework solutions.",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "build": "gulp build",
+    "serve": "gulp serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikhail Kots",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-cli": "^2.3.0",
+    "gulp-concat": "^2.6.1"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1",
+    "skeleton.css": "^2.0.4",
+    "source-map-resolve": "^0.5.3"
+  }
+}
