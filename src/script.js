@@ -1,10 +1,13 @@
+import $ from 'jquery';
+
+import {Http} from './Http.js';
+import './styles.css';
+
 const STUDENTS_API = 'https://5dd3d5ba8b5e080014dc4bfa.mockapi.io/students/';
 
 const $marksTemplate = $('#marksTemplate').html();
 const $marksTable = $('#marksTable');
 const $addStudentEl = $('#addStudentBtn');
-const $addStudentInput = $('#addStudentInput');
-const $deleteButton = $('.deleteBtn');
 const emptyMarks = [0,0,0,0,0,0,0,0,0,0];
 
 const resourceModel = new Http(STUDENTS_API);

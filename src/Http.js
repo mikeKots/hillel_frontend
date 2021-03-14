@@ -1,4 +1,4 @@
-class Http {
+export class Http {
     constructor(baseUrl) {
         this._baseUrl = baseUrl;
     }
