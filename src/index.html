@@ -3,57 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Students Marks</title>
+        <title>Websoket chat</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-        <div class="container">
-          <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Mark 1</th>
-                    <th>Mark 2</th>
-                    <th>Mark 3</th>
-                    <th>Mark 4</th>
-                    <th>Mark 5</th>
-                    <th>Mark 6</th>
-                    <th>Mark 7</th>
-                    <th>Mark 8</th>
-                    <th>Mark 9</th>
-                    <th>Mark 10</th>
-                </tr>
-                </thead>
-                <tbody id="marksTable"></tbody>
-                <tfoot>
-                    <tr>
-                        <td>
-                            <label>Add Student</label>
-                            <input class="input" type="text" id="addStudentInput" />
-                        </td>
-                        <td><button id="addStudentBtn">Add</button></td>
-                    </tr>
-                </tfoot>
-            </table>
-
-            <script type="text/template" id="marksTemplate">
-                <tr class="item" data-id="{{id}}">
-                    <td>{{name}}<button class="deleteBtn">X</button></td>
-                    <td><input class="input" type="text" value="{{0}}" /></td>
-                    <td><input class="input" type="text" value="{{1}}" /></td>
-                    <td><input class="input" type="text" value="{{2}}" /></td>
-                    <td><input class="input" type="text" value="{{3}}" /></td>
-                    <td><input class="input" type="text" value="{{4}}" /></td>
-                    <td><input class="input" type="text" value="{{5}}" /></td>
-                    <td><input class="input" type="text" value="{{6}}" /></td>
-                    <td><input class="input" type="text" value="{{7}}" /></td>
-                    <td><input class="input" type="text" value="{{8}}" /></td>
-                    <td><input class="input" type="text" value="{{9}}" /></td>
-                </tr>
-            </script>
-            <script type="text/template" id="marksInput">
-            </script>
-        </div>
+        <ul id="messages"></ul>
+        <p></p>
+        <input id="nameInput" type="text" name="name" placeholder="name" size="20">
+        <input id="messageInput" type="text" name="message" placeholder="message" size="20">
+        <button id="submitBtn" type="button" name="button">Отправить</button>
     </body>
 </html>

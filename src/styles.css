@@ -3,35 +3,8 @@ body{
   padding: 25px;
 }
 
-.container{
-  margin: 0 auto;
-  padding-left: 32px;
-  padding-right: 32px;
-  padding-top: 40px;
-  border-radius: 12px;
-  background-color: #90a4ae;
-  font-family: Lato;
-  overflow: hidden;
-}
-
-.table {
-  width: 92vw;
-  table-layout: fixed;
-}
-
-.input {
-  width: 100px;
-}
-
-.container h2{
-  text-align: center;
-}
-
-.deleteBtn {
-  float: right;
-}
-
-td, th {
-  padding: 12px;
-  border: 2px dotted;
+li {
+  list-style: none;
+  background-color: blanchedalmond;
+  width: 20%;
 }
